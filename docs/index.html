@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Arca | Secure Notes for macOS</title>
+    <meta
+      name="description"
+      content="Arca is a calm, encrypted note utility for macOS. Built for people who miss the old Secure Notes workflow."
+    />
+    <link rel="icon" type="image/png" href="./assets/app-icon.png" />
+    <link rel="stylesheet" href="./assets/styles.css" />
+  </head>
+  <body>
+    <header class="site-nav">
+      <div class="nav-inner">
+        <a class="brand" href="#overview" aria-label="Arca">
+          <img src="./assets/app-icon.png" alt="Arca icon" />
+          <span>Arca</span>
+        </a>
+        <div class="nav-right">
+          <nav class="nav-links" aria-label="Primary">
+            <a href="#overview" data-i18n="nav.overview">Overview</a>
+            <a href="#features" data-i18n="nav.features">Features</a>
+            <a href="#download" data-i18n="nav.download">Download</a>
+          </nav>
+          <div class="locale-toggle" role="group" aria-label="Language selector">
+            <button class="locale-button is-active" type="button" data-locale="en">EN</button>
+            <button class="locale-button" type="button" data-locale="ja">JA</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero-band hero-dark" id="overview">
+        <div class="hero shell">
+          <div class="section-copy hero-copy">
+            <p class="eyebrow" data-i18n="hero.eyebrow">Secure Notes, reintroduced for modern macOS</p>
+            <h1 data-i18n="hero.title">Quiet, encrypted notes that stay out of your way.</h1>
+            <p class="intro" data-i18n="hero.body">
+              Arca is a focused replacement for the old Keychain Access Secure Notes workflow.
+              One note per encrypted file, iCloud-friendly storage, and a native macOS utility feel.
+            </p>
+            <div class="hero-actions">
+              <a class="button button-primary" href="./downloads/Arca.dmg" data-i18n="hero.download">Download DMG</a>
+              <a class="button button-secondary" href="https://github.com/SigFoundry/Arca" data-i18n="hero.github">View on GitHub</a>
+            </div>
+            <p class="micro-copy" data-i18n="hero.note">Requires macOS. Distributed as a notarization-ready DMG.</p>
+          </div>
+          <div class="hero-media">
+            <img class="hero-product" src="./arca-hero.svg" alt="Arca hero illustration" />
+          </div>
+        </div>
+      </section>
+
+      <section class="feature-band feature-strip-light">
+        <div class="feature-strip-inner shell">
+          <div>
+            <p class="stat-label" data-i18n="stats.encrypted.label">Encrypted on disk</p>
+            <p class="stat-value" data-i18n="stats.encrypted.value">AES-256-GCM</p>
+          </div>
+          <div>
+            <p class="stat-label" data-i18n="stats.model.label">Storage model</p>
+            <p class="stat-value" data-i18n="stats.model.value">1 note = 1 file</p>
+          </div>
+          <div>
+            <p class="stat-label" data-i18n="stats.sync.label">Sync behavior</p>
+            <p class="stat-value" data-i18n="stats.sync.value">iCloud-friendly</p>
+          </div>
+          <div>
+            <p class="stat-label" data-i18n="stats.unlock.label">Unlock flow</p>
+            <p class="stat-value" data-i18n="stats.unlock.value">Password + biometrics</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="showcase-band showcase-light">
+        <div class="showcase shell">
+          <div class="showcase-copy">
+            <p class="eyebrow" data-i18n="showcase.eyebrow">Built for familiar habits</p>
+            <h2 data-i18n="showcase.title">A calm utility, not a noisy notebook app.</h2>
+            <p data-i18n="showcase.body">
+              If you kept sensitive snippets in Secure Notes because it was fast, private, and
+              low-friction, Arca is designed for that exact workflow. Unlock, search, edit, lock,
+              and move on.
+            </p>
+            <ul class="feature-list">
+              <li data-i18n="showcase.point1">Native macOS interface with a Keychain-like three-pane layout</li>
+              <li data-i18n="showcase.point2">Master password protection with optional biometric local unlock</li>
+              <li data-i18n="showcase.point3">Single-window utility behavior without extra workspace clutter</li>
+            </ul>
+          </div>
+          <div class="showcase-media">
+            <img src="./assets/arca-screenshot.svg" alt="Arca application preview" />
+          </div>
+        </div>
+      </section>
+
+      <section class="grid-band grid-section-dark" id="features">
+        <div class="grid-section shell">
+          <div class="section-copy section-copy-center narrow">
+            <p class="eyebrow" data-i18n="features.eyebrow">Why Arca</p>
+            <h2 data-i18n="features.title">Private by design. Durable by default.</h2>
+            <p data-i18n="features.body">
+              Arca keeps the storage model simple so your notes remain inspectable, syncable,
+              and resilient under real-world file conflicts.
+            </p>
+          </div>
+          <div class="card-grid">
+            <article class="info-card">
+              <h3 data-i18n="cards.c1.title">Encrypted note files</h3>
+              <p data-i18n="cards.c1.body">
+                Each note lives in its own encrypted file, protected with AES-256-GCM and a
+                master password-derived key.
+              </p>
+            </article>
+            <article class="info-card">
+              <h3 data-i18n="cards.c2.title">Safer sync behavior</h3>
+              <p data-i18n="cards.c2.body">
+                Conflicts are preserved instead of silently merged away, and broken files are
+                skipped without taking the whole vault down.
+              </p>
+            </article>
+            <article class="info-card">
+              <h3 data-i18n="cards.c3.title">Ready for iCloud Drive</h3>
+              <p data-i18n="cards.c3.body">
+                Arca stores notes in an iCloud Drive-backed vault when available and falls back
+                to local storage when it is not.
+              </p>
+            </article>
+            <article class="info-card">
+              <h3 data-i18n="cards.c4.title">Focused on quick access</h3>
+              <p data-i18n="cards.c4.body">
+                Search, edit, save intentionally, and lock again. No extra system for tags,
+                collaboration, or rich text noise.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="download-band download-section-light" id="download">
+        <div class="download-section shell">
+          <div class="section-copy section-copy-center narrow">
+            <p class="eyebrow" data-i18n="download.eyebrow">Download</p>
+            <h2 data-i18n="download.title">Install Arca with a single DMG.</h2>
+            <p data-i18n="download.body">
+              This GitHub Pages site serves the downloadable DMG directly, so you can link the
+              product page and the installer from the same place.
+            </p>
+            <div class="hero-actions download-actions">
+              <a class="button button-primary" href="./downloads/Arca.dmg" data-i18n="download.primary">Download Arca.dmg</a>
+              <a class="button button-secondary" href="https://github.com/SigFoundry/Arca" data-i18n="download.secondary">Read the source</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <p>Arca</p>
+        <p>MIT License</p>
+        <a href="https://github.com/SigFoundry/Arca">SigFoundry/Arca</a>
+      </div>
+    </footer>
+
+    <script>
+      const copy = {
+        en: {
+          pageTitle: "Arca | Secure Notes for macOS",
+          pageDescription:
+            "Arca is a calm, encrypted note utility for macOS. Built for people who miss the old Secure Notes workflow.",
+          "nav.overview": "Overview",
+          "nav.features": "Features",
+          "nav.download": "Download",
+          "hero.eyebrow": "Secure Notes, reintroduced for modern macOS",
+          "hero.title": "Quiet, encrypted notes that stay out of your way.",
+          "hero.body":
+            "Arca is a focused replacement for the old Keychain Access Secure Notes workflow. One note per encrypted file, iCloud-friendly storage, and a native macOS utility feel.",
+          "hero.download": "Download DMG",
+          "hero.github": "View on GitHub",
+          "hero.note": "Requires macOS. Distributed as a notarization-ready DMG.",
+          "stats.encrypted.label": "Encrypted on disk",
+          "stats.encrypted.value": "AES-256-GCM",
+          "stats.model.label": "Storage model",
+          "stats.model.value": "1 note = 1 file",
+          "stats.sync.label": "Sync behavior",
+          "stats.sync.value": "iCloud-friendly",
+          "stats.unlock.label": "Unlock flow",
+          "stats.unlock.value": "Password + biometrics",
+          "showcase.eyebrow": "Built for familiar habits",
+          "showcase.title": "A calm utility, not a noisy notebook app.",
+          "showcase.body":
+            "If you kept sensitive snippets in Secure Notes because it was fast, private, and low-friction, Arca is designed for that exact workflow. Unlock, search, edit, lock, and move on.",
+          "showcase.point1": "Native macOS interface with a Keychain-like three-pane layout",
+          "showcase.point2": "Master password protection with optional biometric local unlock",
+          "showcase.point3": "Single-window utility behavior without extra workspace clutter",
+          "features.eyebrow": "Why Arca",
+          "features.title": "Private by design. Durable by default.",
+          "features.body":
+            "Arca keeps the storage model simple so your notes remain inspectable, syncable, and resilient under real-world file conflicts.",
+          "cards.c1.title": "Encrypted note files",
+          "cards.c1.body":
+            "Each note lives in its own encrypted file, protected with AES-256-GCM and a master password-derived key.",
+          "cards.c2.title": "Safer sync behavior",
+          "cards.c2.body":
+            "Conflicts are preserved instead of silently merged away, and broken files are skipped without taking the whole vault down.",
+          "cards.c3.title": "Ready for iCloud Drive",
+          "cards.c3.body":
+            "Arca stores notes in an iCloud Drive-backed vault when available and falls back to local storage when it is not.",
+          "cards.c4.title": "Focused on quick access",
+          "cards.c4.body":
+            "Search, edit, save intentionally, and lock again. No extra system for tags, collaboration, or rich text noise.",
+          "download.eyebrow": "Download",
+          "download.title": "A DMG is ready, so you can install Arca and start using it right away.",
+          "download.body":
+            "Download the DMG, drag Arca into Applications, and move straight into your secure notes workflow on macOS.",
+          "download.primary": "Download Arca.dmg",
+          "download.secondary": "Read the source"
+        },
+        ja: {
+          pageTitle: "Arca | macOS 向けセキュアノート",
+          pageDescription:
+            "Arca は、かつての Secure Notes の使い心地を今の macOS で続けるための、静かで安全なノートアプリです。",
+          "nav.overview": "概要",
+          "nav.features": "特長",
+          "nav.download": "ダウンロード",
+          "hero.eyebrow": "Secure Notes の感覚を、今の macOS に",
+          "hero.title": "静かに使える、暗号化ノート。",
+          "hero.body":
+            "Arca は、Keychain Access の Secure Notes が好きだった人のためのシンプルな代替アプリです。1 ノート 1 ファイルの保存方式、iCloud と相性のよい構成、そして macOS らしい落ち着いた操作感を大切にしています。",
+          "hero.download": "DMG をダウンロード",
+          "hero.github": "GitHub を見る",
+          "hero.note": "macOS 向け。ダウンロード後すぐに使い始められる DMG を用意しています。",
+          "stats.encrypted.label": "保存時の暗号化",
+          "stats.encrypted.value": "AES-256-GCM",
+          "stats.model.label": "保存モデル",
+          "stats.model.value": "1 ノート = 1 ファイル",
+          "stats.sync.label": "同期の前提",
+          "stats.sync.value": "iCloud 対応",
+          "stats.unlock.label": "解除方法",
+          "stats.unlock.value": "パスワード + 生体認証",
+          "showcase.eyebrow": "慣れた使い方のまま",
+          "showcase.title": "多機能なノートアプリではなく、静かなユーティリティとして使えます。",
+          "showcase.body":
+            "秘匿したいテキストをすばやく保存し、検索し、必要なときだけ編集してまた閉じる。そんな短い動線を崩さず、今の macOS で気持ちよく使い続けられるようにしたのが Arca です。",
+          "showcase.point1": "Keychain を思わせる 3 ペイン構成の macOS ネイティブ UI",
+          "showcase.point2": "マスターパスワード保護と、対応 Mac で使える生体認証解除",
+          "showcase.point3": "余計なウィンドウを増やさない、落ち着いたユーティリティ挙動",
+          "features.eyebrow": "Arca の特長",
+          "features.title": "安全性を優先しながら、扱いやすさも損なわない設計。",
+          "features.body":
+            "保存方式をあえて単純に保つことで、ノートは見通しやすく、同期にもなじみやすく、競合や破損にも強い構成になっています。",
+          "cards.c1.title": "暗号化されたノートファイル",
+          "cards.c1.body":
+            "各ノートは独立した暗号化ファイルとして保存され、AES-256-GCM とマスターパスワード由来の鍵で保護されます。",
+          "cards.c2.title": "壊れにくい同期設計",
+          "cards.c2.body":
+            "競合が起きても片方を黙って消さずに保持し、壊れたファイルがあっても vault 全体を巻き込まずに扱えます。",
+          "cards.c3.title": "iCloud Drive に自然に対応",
+          "cards.c3.body":
+            "iCloud が使える環境では iCloud Drive ベースの vault を使い、使えない環境ではローカル保存へ自然に切り替わります。",
+          "cards.c4.title": "必要なことだけに集中",
+          "cards.c4.body":
+            "検索、編集、明示的な保存、再ロック。タグや共同編集や過剰な装飾は持ち込まず、すばやく扱えることを優先しています。",
+          "download.eyebrow": "ダウンロード",
+          "download.title": "DMG を用意しているので、ダウンロード後すぐに使い始められます。",
+          "download.body":
+            "DMG をダウンロードして Applications に入れるだけで、macOS 上ですぐに Arca を使い始められます。",
+          "download.primary": "Arca.dmg をダウンロード",
+          "download.secondary": "ソースコードを見る"
+        }
+      };
+
+      const metaDescription = document.querySelector('meta[name="description"]');
+      const localeButtons = document.querySelectorAll(".locale-button");
+      const localizedNodes = document.querySelectorAll("[data-i18n]");
+
+      function applyLocale(locale) {
+        const dict = copy[locale] || copy.en;
+        document.documentElement.lang = locale;
+        document.title = dict.pageTitle;
+        metaDescription.setAttribute("content", dict.pageDescription);
+
+        localizedNodes.forEach((node) => {
+          const key = node.getAttribute("data-i18n");
+          if (dict[key]) {
+            node.textContent = dict[key];
+          }
+        });
+
+        localeButtons.forEach((button) => {
+          button.classList.toggle("is-active", button.dataset.locale === locale);
+        });
+
+        try {
+          localStorage.setItem("arca-locale", locale);
+        } catch (error) {
+          void error;
+        }
+      }
+
+      const browserLocale = navigator.language && navigator.language.toLowerCase().startsWith("ja") ? "ja" : "en";
+      let initialLocale = browserLocale;
+
+      try {
+        initialLocale = localStorage.getItem("arca-locale") || browserLocale;
+      } catch (error) {
+        void error;
+      }
+
+      localeButtons.forEach((button) => {
+        button.addEventListener("click", () => applyLocale(button.dataset.locale));
+      });
+
+      applyLocale(initialLocale === "ja" ? "ja" : "en");
+    </script>
+  </body>
+</html>

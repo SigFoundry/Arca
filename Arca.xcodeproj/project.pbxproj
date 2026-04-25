@@ -1,0 +1,459 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0867884302EF2E79E063E4AF /* VaultManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED86AD8B091D221D1A96AAC /* VaultManager.swift */; };
+		0BD45F60B7E414B23F4A73D0 /* CryptoService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 191665F2053C6149994F59C5 /* CryptoService.swift */; };
+		0D058FD8882393CF526D2506 /* CredentialUnlockService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09E8D1FF64282EDE1EA1F2DE /* CredentialUnlockService.swift */; };
+		164FC54502795408708DB637 /* FileFormat.swift in Sources */ = {isa = PBXBuildFile; fileRef = A106AFF2971CE836C3581E1A /* FileFormat.swift */; };
+		68629ED3E66F738B800B5FCA /* AtomicFileWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11015D4F762F453D829CB339 /* AtomicFileWriter.swift */; };
+		84F5069F270BB04E5A3C438B /* LockController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85C521D8E24D96E03CE63EF8 /* LockController.swift */; };
+		8575F95D412DC7C2EDFFE350 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6249205D2C62E5B5364FB1F /* AppModel.swift */; };
+		8F37F12AB5270D313705E2AF /* Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = B069ECAF8DA356E886FC4BA3 /* Localization.swift */; };
+		9463CCEC9348E891236DA678 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 88DEED27973FD5970FBF2894 /* Localizable.strings */; };
+		9DB3BB769F85C3BE88BA1F98 /* ArcaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B2884E889806619391A50D4 /* ArcaApp.swift */; };
+		B30623C9F4EEAC358C25A49E /* SearchIndex.swift in Sources */ = {isa = PBXBuildFile; fileRef = A327461BAF53A6A1930D3F4A /* SearchIndex.swift */; };
+		B7B4CB3AFBA341C6CE9D540C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 617727A3F7E41C570140825F /* Assets.xcassets */; };
+		C5E7B40E567C5F520A9EB0C5 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09A2615044A2D98C49FA4981 /* Models.swift */; };
+		C6235CBFBC5DA46ECE6A4926 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 529304F011B0A1772C35B073 /* Cocoa.framework */; };
+		E2FA58D0C8FA38D2A43C7983 /* NoteStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A5476F266F22D730213EB4C /* NoteStore.swift */; };
+		E647D650B1325BE8ABB32689 /* arca-hero.svg in Resources */ = {isa = PBXBuildFile; fileRef = 1293E3EAE4FC2D1EE13874D2 /* arca-hero.svg */; };
+		E6E587A787436599E9AE95E6 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 66084875482503704C639681 /* Localizable.strings */; };
+		F1DDA3670439EDBD7310E7C4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3979F8F44838E3F452F768C /* ContentView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		09A2615044A2D98C49FA4981 /* Models.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Models.swift; path = Sources/Arca/Models.swift; sourceTree = "<group>"; };
+		09E8D1FF64282EDE1EA1F2DE /* CredentialUnlockService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CredentialUnlockService.swift; path = Sources/Arca/CredentialUnlockService.swift; sourceTree = "<group>"; };
+		11015D4F762F453D829CB339 /* AtomicFileWriter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AtomicFileWriter.swift; path = Sources/Arca/AtomicFileWriter.swift; sourceTree = "<group>"; };
+		1293E3EAE4FC2D1EE13874D2 /* arca-hero.svg */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = "arca-hero.svg"; path = "docs/arca-hero.svg"; sourceTree = "<group>"; };
+		191665F2053C6149994F59C5 /* CryptoService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CryptoService.swift; path = Sources/Arca/CryptoService.swift; sourceTree = "<group>"; };
+		3B2884E889806619391A50D4 /* ArcaApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ArcaApp.swift; path = Sources/Arca/ArcaApp.swift; sourceTree = "<group>"; };
+		529304F011B0A1772C35B073 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
+		617727A3F7E41C570140825F /* Assets.xcassets */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Arca/Assets.xcassets; sourceTree = "<group>"; };
+		65CC69A1BB01DA682996A995 /* Arca.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Arca.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		66084875482503704C639681 /* Localizable.strings */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = Localizable.strings; path = Sources/Arca/Resources/ja.lproj/Localizable.strings; sourceTree = "<group>"; };
+		85C521D8E24D96E03CE63EF8 /* LockController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LockController.swift; path = Sources/Arca/LockController.swift; sourceTree = "<group>"; };
+		88DEED27973FD5970FBF2894 /* Localizable.strings */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = Localizable.strings; path = Sources/Arca/Resources/en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		8A5476F266F22D730213EB4C /* NoteStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NoteStore.swift; path = Sources/Arca/NoteStore.swift; sourceTree = "<group>"; };
+		A106AFF2971CE836C3581E1A /* FileFormat.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FileFormat.swift; path = Sources/Arca/FileFormat.swift; sourceTree = "<group>"; };
+		A327461BAF53A6A1930D3F4A /* SearchIndex.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SearchIndex.swift; path = Sources/Arca/SearchIndex.swift; sourceTree = "<group>"; };
+		B069ECAF8DA356E886FC4BA3 /* Localization.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Localization.swift; path = Sources/Arca/Localization.swift; sourceTree = "<group>"; };
+		D167FA7FB315291356EA8E8B /* Arca.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = Arca.entitlements; sourceTree = "<group>"; };
+		D6249205D2C62E5B5364FB1F /* AppModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AppModel.swift; path = Sources/Arca/AppModel.swift; sourceTree = "<group>"; };
+		E3979F8F44838E3F452F768C /* ContentView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ContentView.swift; path = Sources/Arca/ContentView.swift; sourceTree = "<group>"; };
+		EED86AD8B091D221D1A96AAC /* VaultManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = VaultManager.swift; path = Sources/Arca/VaultManager.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		F9C91FB6DB68EE91AD582B6D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C6235CBFBC5DA46ECE6A4926 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1056CB971D78FD5F8967653D /* Arca */ = {
+			isa = PBXGroup;
+			children = (
+				617727A3F7E41C570140825F /* Assets.xcassets */,
+			);
+			name = Arca;
+			sourceTree = "<group>";
+		};
+		3C7D37C5D30202B886148738 /* OS X */ = {
+			isa = PBXGroup;
+			children = (
+				529304F011B0A1772C35B073 /* Cocoa.framework */,
+			);
+			name = "OS X";
+			sourceTree = "<group>";
+		};
+		45AB7C21045B17AC7CFD3118 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				D3D89F7D5535529507B4FE6F /* Arca */,
+			);
+			name = Sources;
+			sourceTree = "<group>";
+		};
+		5777DFB9BE04FF6FFC59A3D5 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				3C7D37C5D30202B886148738 /* OS X */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		65E2A70E69739253854AE655 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				65CC69A1BB01DA682996A995 /* Arca.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		AEF38720DDFD003AC5E81687 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				88DEED27973FD5970FBF2894 /* Localizable.strings */,
+				66084875482503704C639681 /* Localizable.strings */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		BEA62FD3C8DD0ED94BBF6401 /* docs */ = {
+			isa = PBXGroup;
+			children = (
+				1293E3EAE4FC2D1EE13874D2 /* arca-hero.svg */,
+			);
+			name = docs;
+			sourceTree = "<group>";
+		};
+		CFC78639A0F6549BE4FEC062 = {
+			isa = PBXGroup;
+			children = (
+				65E2A70E69739253854AE655 /* Products */,
+				5777DFB9BE04FF6FFC59A3D5 /* Frameworks */,
+				45AB7C21045B17AC7CFD3118 /* Sources */,
+				BEA62FD3C8DD0ED94BBF6401 /* docs */,
+				D167FA7FB315291356EA8E8B /* Arca.entitlements */,
+				1056CB971D78FD5F8967653D /* Arca */,
+			);
+			sourceTree = "<group>";
+		};
+		D3D89F7D5535529507B4FE6F /* Arca */ = {
+			isa = PBXGroup;
+			children = (
+				AEF38720DDFD003AC5E81687 /* Resources */,
+				D6249205D2C62E5B5364FB1F /* AppModel.swift */,
+				3B2884E889806619391A50D4 /* ArcaApp.swift */,
+				11015D4F762F453D829CB339 /* AtomicFileWriter.swift */,
+				E3979F8F44838E3F452F768C /* ContentView.swift */,
+				09E8D1FF64282EDE1EA1F2DE /* CredentialUnlockService.swift */,
+				191665F2053C6149994F59C5 /* CryptoService.swift */,
+				A106AFF2971CE836C3581E1A /* FileFormat.swift */,
+				B069ECAF8DA356E886FC4BA3 /* Localization.swift */,
+				85C521D8E24D96E03CE63EF8 /* LockController.swift */,
+				09A2615044A2D98C49FA4981 /* Models.swift */,
+				8A5476F266F22D730213EB4C /* NoteStore.swift */,
+				A327461BAF53A6A1930D3F4A /* SearchIndex.swift */,
+				EED86AD8B091D221D1A96AAC /* VaultManager.swift */,
+			);
+			name = Arca;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		18D37563DDECEE83547C9D75 /* Arca */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 39C2DB883E3D9F552C681CDA /* Build configuration list for PBXNativeTarget "Arca" */;
+			buildPhases = (
+				8BAE95F6B1C55D382665E959 /* Sources */,
+				F9C91FB6DB68EE91AD582B6D /* Frameworks */,
+				78DF4C3E749080229E907B3C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Arca;
+			productName = Arca;
+			productReference = 65CC69A1BB01DA682996A995 /* Arca.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		E3D8E627CB8556FA8BDB200D /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 2600;
+				LastUpgradeCheck = 2600;
+				TargetAttributes = {
+					18D37563DDECEE83547C9D75 = {
+						CreatedOnToolsVersion = 26.3;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 753E6D966302C85F95C8AA75 /* Build configuration list for PBXProject "Arca" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = CFC78639A0F6549BE4FEC062;
+			productRefGroup = 65E2A70E69739253854AE655 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				18D37563DDECEE83547C9D75 /* Arca */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		78DF4C3E749080229E907B3C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9463CCEC9348E891236DA678 /* Localizable.strings in Resources */,
+				E6E587A787436599E9AE95E6 /* Localizable.strings in Resources */,
+				E647D650B1325BE8ABB32689 /* arca-hero.svg in Resources */,
+				B7B4CB3AFBA341C6CE9D540C /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8BAE95F6B1C55D382665E959 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8575F95D412DC7C2EDFFE350 /* AppModel.swift in Sources */,
+				9DB3BB769F85C3BE88BA1F98 /* ArcaApp.swift in Sources */,
+				68629ED3E66F738B800B5FCA /* AtomicFileWriter.swift in Sources */,
+				F1DDA3670439EDBD7310E7C4 /* ContentView.swift in Sources */,
+				0D058FD8882393CF526D2506 /* CredentialUnlockService.swift in Sources */,
+				0BD45F60B7E414B23F4A73D0 /* CryptoService.swift in Sources */,
+				164FC54502795408708DB637 /* FileFormat.swift in Sources */,
+				8F37F12AB5270D313705E2AF /* Localization.swift in Sources */,
+				84F5069F270BB04E5A3C438B /* LockController.swift in Sources */,
+				C5E7B40E567C5F520A9EB0C5 /* Models.swift in Sources */,
+				E2FA58D0C8FA38D2A43C7983 /* NoteStore.swift in Sources */,
+				B30623C9F4EEAC358C25A49E /* SearchIndex.swift in Sources */,
+				0867884302EF2E79E063E4AF /* VaultManager.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		3D2B06E375CE3DD3F2D7759F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
+				CODE_SIGN_ENTITLEMENTS = Arca.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_APP_SANDBOX = NO;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Arca;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2026 Aki";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.sigcon-inc.apps.arca";
+				PRODUCT_BUNDLE_PACKAGE_TYPE = APPL;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		6D204770E9CCA0E1D090BBFA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
+				CODE_SIGN_ENTITLEMENTS = Arca.entitlements;
+				CODE_SIGN_IDENTITY = "Developer ID Application";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=macosx*]" = 8NMP6KP8ZH;
+				ENABLE_APP_SANDBOX = NO;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Arca;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2026 Aki";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				OTHER_CODE_SIGN_FLAGS = "--timestamp";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.sigcon-inc.apps.arca";
+				PRODUCT_BUNDLE_PACKAGE_TYPE = APPL;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		79A6FA0BE44B6DF1C51FC7A2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_LANGUAGE = en;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Arca;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2026 Aki";
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.sigcon-inc.apps.arca";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		EB6A610B417325117B1003F4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_LANGUAGE = en;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Arca;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2026 Aki";
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.sigcon-inc.apps.arca";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		39C2DB883E3D9F552C681CDA /* Build configuration list for PBXNativeTarget "Arca" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6D204770E9CCA0E1D090BBFA /* Release */,
+				3D2B06E375CE3DD3F2D7759F /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		753E6D966302C85F95C8AA75 /* Build configuration list for PBXProject "Arca" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				79A6FA0BE44B6DF1C51FC7A2 /* Debug */,
+				EB6A610B417325117B1003F4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = E3D8E627CB8556FA8BDB200D /* Project object */;
+}
