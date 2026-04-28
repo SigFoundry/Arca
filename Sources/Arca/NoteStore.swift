@@ -3,11 +3,14 @@ import Foundation
 
 enum NoteStoreError: Error, LocalizedError {
     case missingMetadata
+    case missingAuthenticationMethod
 
     var errorDescription: String? {
         switch self {
         case .missingMetadata:
             return L10n.string("error.notestore.missing_metadata")
+        case .missingAuthenticationMethod:
+            return L10n.string("error.notestore.missing_auth_method")
         }
     }
 }

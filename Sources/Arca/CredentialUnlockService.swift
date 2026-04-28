@@ -4,6 +4,7 @@ import Security
 
 enum CredentialUnlockError: Error, LocalizedError {
     case unavailable
+    case missingEntitlement
     case credentialMissing
     case invalidCredentialData
     case unexpectedStatus(OSStatus)
@@ -11,62 +12,34 @@ enum CredentialUnlockError: Error, LocalizedError {
     var errorDescription: String? {
         switch self {
         case .unavailable:
-            return L10n.string("error.biometric.unavailable")
+            return L10n.string("error.device_auth.unavailable")
+        case .missingEntitlement:
+            return L10n.string("error.device_auth.missing_entitlement")
         case .credentialMissing:
-            return L10n.string("error.biometric.missing")
+            return L10n.string("error.device_auth.missing")
         case .invalidCredentialData:
-            return L10n.string("error.biometric.invalid")
+            return L10n.string("error.device_auth.invalid")
         case .unexpectedStatus(let status):
-            return L10n.format("error.biometric.status", status)
+            return L10n.format("error.device_auth.status", status)
         }
     }
 }
 
 struct CredentialUnlockService {
-    enum BiometricKind {
-        case touchID
-        case faceID
-        case opticID
-        case generic
-
-        var buttonTitle: String {
-            switch self {
-            case .touchID:
-                return L10n.string("locked.action.touch_id")
-            case .faceID:
-                return L10n.string("locked.action.face_id")
-            case .opticID:
-                return L10n.string("locked.action.optic_id")
-            case .generic:
-                return L10n.string("locked.action.biometric")
-            }
-        }
-    }
-
-    private let service = "com.sigcon-inc.apps.arca.biometric-unlock"
+    private let service = "com.sigcon-inc.apps.arca.device-auth-unlock"
     private let account = "default-vault"
 
     func isRunningAsAppBundle() -> Bool {
         Bundle.main.bundleURL.pathExtension == "app"
     }
 
-    func biometricKind() -> BiometricKind? {
+    func isDeviceAuthenticationAvailable() -> Bool {
         var error: NSError?
-        let context = LAContext()
-        guard context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) else {
-            return nil
-        }
+        return LAContext().canEvaluatePolicy(.deviceOwnerAuthentication, error: &error)
+    }
 
-        switch context.biometryType {
-        case .touchID:
-            return .touchID
-        case .faceID:
-            return .faceID
-        case .opticID:
-            return .opticID
-        default:
-            return .generic
-        }
+    func buttonTitle() -> String {
+        L10n.string("locked.action.device_auth")
     }
 
     func hasStoredCredential() -> Bool {
@@ -86,8 +59,8 @@ struct CredentialUnlockService {
         return status == errSecSuccess || status == errSecInteractionNotAllowed
     }
 
-    func store(password: String) throws {
-        guard biometricKind() != nil else {
+    func store(secret: String) throws {
+        guard isDeviceAuthenticationAvailable() else {
             throw CredentialUnlockError.unavailable
         }
 
@@ -95,13 +68,13 @@ struct CredentialUnlockService {
         guard let accessControl = SecAccessControlCreateWithFlags(
             nil,
             kSecAttrAccessibleWhenUnlockedThisDeviceOnly,
-            .biometryCurrentSet,
+            .userPresence,
             &accessError
         ) else {
             throw accessError?.takeRetainedValue() as Error? ?? CredentialUnlockError.unavailable
         }
 
-        let secret = Data(password.utf8)
+        let payload = Data(secret.utf8)
         let baseQuery: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrService as String: service,
@@ -112,7 +85,7 @@ struct CredentialUnlockService {
             kSecAttrService as String: service,
             kSecAttrAccount as String: account,
             kSecAttrAccessControl as String: accessControl,
-            kSecValueData as String: secret
+            kSecValueData as String: payload
         ]
 
         SecItemDelete(baseQuery as CFDictionary)
@@ -122,8 +95,17 @@ struct CredentialUnlockService {
         }
     }
 
-    func retrievePassword(prompt: String) throws -> String {
-        guard biometricKind() != nil else {
+    func deleteStoredSecret() {
+        let query: [String: Any] = [
+            kSecClass as String: kSecClassGenericPassword,
+            kSecAttrService as String: service,
+            kSecAttrAccount as String: account
+        ]
+        SecItemDelete(query as CFDictionary)
+    }
+
+    func retrieveSecret(prompt: String) throws -> String {
+        guard isDeviceAuthenticationAvailable() else {
             throw CredentialUnlockError.unavailable
         }
 
@@ -145,11 +127,11 @@ struct CredentialUnlockService {
         case errSecSuccess:
             guard
                 let data = item as? Data,
-                let password = String(data: data, encoding: .utf8)
+                let secret = String(data: data, encoding: .utf8)
             else {
                 throw CredentialUnlockError.invalidCredentialData
             }
-            return password
+            return secret
         case errSecItemNotFound:
             throw CredentialUnlockError.credentialMissing
         default:
@@ -159,26 +141,46 @@ struct CredentialUnlockService {
 
     private func mapStatus(_ status: OSStatus) -> CredentialUnlockError {
         switch status {
-        case errSecMissingEntitlement, errSecNotAvailable:
+        case errSecMissingEntitlement:
+            return .missingEntitlement
+        case errSecNotAvailable:
             return .unavailable
         default:
             return .unexpectedStatus(status)
         }
     }
 
-    func setupMessage(hasStoredCredential: Bool) -> String {
-        guard biometricKind() != nil else {
-            return L10n.string("locked.biometric_unavailable_hint")
+    func lockedScreenMessage(hasMasterPassword: Bool, hasDeviceAuthentication: Bool, hasStoredCredential: Bool) -> String {
+        if hasMasterPassword && hasDeviceAuthentication {
+            if isDeviceAuthenticationAvailable() == false {
+                return L10n.string("locked.multiple_auth_master_only_hint")
+            }
+            if hasStoredCredential {
+                return L10n.string("locked.multiple_auth_hint")
+            }
+            return L10n.string("locked.multiple_auth_master_only_hint")
         }
 
-        if hasStoredCredential {
-            return L10n.string("locked.biometric_ready_hint")
+        if hasMasterPassword {
+            return L10n.string("locked.master_password_hint")
         }
 
-        if isRunningAsAppBundle() == false {
-            return L10n.string("locked.biometric_bundle_hint")
+        if hasDeviceAuthentication {
+            guard isDeviceAuthenticationAvailable() else {
+                return L10n.string("locked.device_auth_unavailable_hint")
+            }
+
+            if hasStoredCredential {
+                return L10n.string("locked.device_auth_ready_hint")
+            }
+
+            if isRunningAsAppBundle() == false {
+                return L10n.string("locked.device_auth_bundle_hint")
+            }
+
+            return L10n.string("locked.device_auth_hint")
         }
 
-        return L10n.string("locked.biometric_hint")
+        return L10n.string("locked.no_auth_methods_hint")
     }
 }

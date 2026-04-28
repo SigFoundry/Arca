@@ -31,7 +31,7 @@ enum FileFormatError: Error, LocalizedError {
 enum FileFormatVersion {
     static let currentNoteFile = 1
     static let currentTombstone = 1
-    static let currentVaultMetadata = 1
+    static let currentVaultMetadata = 3
 
     static func validate(_ version: Int, for kind: FileFormatKind) throws {
         let maxSupported: Int

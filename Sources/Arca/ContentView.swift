@@ -59,23 +59,49 @@ private struct LockedView: View {
                 .font(.system(size: ArcaTypography.bodySize))
                 .foregroundStyle(.secondary)
 
-            VStack(alignment: .leading, spacing: 12) {
-                SecureInputField(L10n.string("locked.master_password"), text: $password)
-                    .focusOnToken(passwordFocusToken)
-                    .selectAllOnToken(passwordSelectAllToken)
-                    .frame(height: 30)
-                    .disabled(model.isUnlocking)
-                    .onChange(of: password) {
-                        model.unlockError = nil
+            if model.needsVaultCreation {
+                VStack(alignment: .leading, spacing: 10) {
+                    Text(L10n.string("locked.auth_mode.title"))
+                        .font(.system(size: ArcaTypography.bodySize, weight: .semibold))
+
+                    VStack(spacing: 10) {
+                        authModeOption(
+                            mode: .masterPassword,
+                            title: L10n.string("locked.auth_mode.master.title"),
+                            message: L10n.string("locked.auth_mode.master.message")
+                        )
+                        authModeOption(
+                            mode: .deviceAuthentication,
+                            title: L10n.string("locked.auth_mode.device.title"),
+                            message: L10n.string("locked.auth_mode.device.message")
+                        )
                     }
 
-                if model.needsVaultCreation {
-                    SecureInputField(L10n.string("locked.confirm_password"), text: $confirmation)
+                    Text(L10n.string("locked.auth_mode.mutable"))
+                        .font(.system(size: ArcaTypography.bodySize))
+                        .foregroundStyle(.secondary)
+                }
+            }
+
+            if model.passwordUnlockAvailable {
+                VStack(alignment: .leading, spacing: 12) {
+                    SecureInputField(L10n.string("locked.master_password"), text: $password)
+                        .focusOnToken(passwordFocusToken)
+                        .selectAllOnToken(passwordSelectAllToken)
                         .frame(height: 30)
                         .disabled(model.isUnlocking)
-                        .onChange(of: confirmation) {
+                        .onChange(of: password) {
                             model.unlockError = nil
                         }
+
+                    if model.needsVaultCreation {
+                        SecureInputField(L10n.string("locked.confirm_password"), text: $confirmation)
+                            .frame(height: 30)
+                            .disabled(model.isUnlocking)
+                            .onChange(of: confirmation) {
+                                model.unlockError = nil
+                            }
+                    }
                 }
             }
 
@@ -85,29 +111,35 @@ private struct LockedView: View {
                     .font(.system(size: ArcaTypography.bodySize))
             }
 
-            Button(model.needsVaultCreation ? L10n.string("locked.action.create") : L10n.string("locked.action.unlock")) {
-                if model.needsVaultCreation, password != confirmation {
-                    model.unlockError = L10n.string("locked.error.passwords_mismatch")
-                    return
-                }
-                model.unlock(password: password)
-                if model.isLocked == false {
-                    password = ""
-                    confirmation = ""
-                }
-            }
-            .disabled(model.isUnlocking)
-            .keyboardShortcut(.defaultAction)
-
-            if model.biometricUnlockAvailable {
-                Button(model.biometricUnlockLabel) {
-                    model.unlockWithBiometrics()
-                    if model.isLocked == false {
-                        password = ""
-                        confirmation = ""
+            if model.passwordUnlockAvailable || model.needsVaultCreation {
+                Button(model.needsVaultCreation ? L10n.string("locked.action.create") : L10n.string("locked.action.unlock")) {
+                    if model.needsVaultCreation {
+                        if model.initialSetupUsesMasterPassword {
+                            if password != confirmation {
+                                model.unlockError = L10n.string("locked.error.passwords_mismatch")
+                                return
+                            }
+                            model.createVault(password: password)
+                        } else {
+                            model.createVault(password: nil)
+                        }
+                    } else {
+                        model.unlockWithPassword(password)
                     }
                 }
-                .disabled(model.isUnlocking)
+                .disabled(model.isUnlocking || model.passwordUnlockAvailable == false)
+                .keyboardShortcut(.defaultAction)
+            }
+
+            if model.deviceUnlockConfigured {
+                Button(model.deviceAuthLabel) {
+                    if model.needsVaultCreation {
+                        model.createVault(password: nil)
+                    } else {
+                        model.unlockWithDeviceAuthentication()
+                    }
+                }
+                .disabled(model.isUnlocking || model.deviceAuthAvailable == false)
             }
 
             if model.isUnlocking {
@@ -120,14 +152,14 @@ private struct LockedView: View {
                 }
             }
 
-            Text(model.biometricSetupMessage)
+            Text(model.lockedScreenMessage)
                 .font(.system(size: ArcaTypography.bodySize))
                 .foregroundStyle(.secondary)
         }
         .padding(32)
         .frame(maxWidth: 460)
         .onAppear {
-            passwordFocusToken += 1
+            focusPasswordIfNeeded()
         }
         .onChange(of: model.isLocked) {
             if model.isLocked == false {
@@ -136,13 +168,56 @@ private struct LockedView: View {
             }
         }
         .onChange(of: model.lockScreenFocusToken) {
-            passwordFocusToken += 1
+            focusPasswordIfNeeded()
         }
         .onChange(of: model.unlockError) {
             guard model.unlockError != nil else { return }
+            guard model.passwordUnlockAvailable else { return }
             passwordFocusToken += 1
             passwordSelectAllToken += 1
         }
+        .onChange(of: model.initialSetupAuthMode) {
+            model.unlockError = nil
+            focusPasswordIfNeeded()
+        }
+    }
+
+    private func focusPasswordIfNeeded() {
+        guard model.passwordUnlockAvailable else { return }
+        passwordFocusToken += 1
+    }
+
+    private func authModeOption(mode: VaultAuthenticationMode, title: String, message: String) -> some View {
+        Button {
+            model.setInitialSetupAuthMode(mode)
+        } label: {
+            HStack(alignment: .top, spacing: 10) {
+                Image(systemName: model.initialSetupAuthMode == mode ? "largecircle.fill.circle" : "circle")
+                    .foregroundStyle(model.initialSetupAuthMode == mode ? Color.accentColor : Color.secondary)
+                    .padding(.top, 2)
+
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(title)
+                        .font(.system(size: ArcaTypography.bodySize, weight: .semibold))
+                        .foregroundStyle(.primary)
+                    Text(message)
+                        .font(.system(size: ArcaTypography.bodySize))
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.leading)
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(12)
+            .background(
+                RoundedRectangle(cornerRadius: 10)
+                    .fill(Color(nsColor: .controlBackgroundColor))
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .strokeBorder(model.initialSetupAuthMode == mode ? Color.accentColor.opacity(0.7) : Color(nsColor: .separatorColor), lineWidth: 1)
+            )
+        }
+        .buttonStyle(.plain)
     }
 }
 
@@ -510,6 +585,7 @@ private struct VaultView: View {
         }
         .sheet(isPresented: $showingSettingsSheet) {
             SettingsWindowView(
+                model: model,
                 locations: $settingsLocations,
                 selectedLocationID: $selectedSettingsLocationID
             )
@@ -857,9 +933,12 @@ private struct SettingsLocation: Identifiable, Hashable {
 }
 
 private struct SettingsWindowView: View {
+    @ObservedObject var model: AppModel
     @Binding var locations: [SettingsLocation]
     @Binding var selectedLocationID: SettingsLocation.ID?
     @Environment(\.dismiss) private var dismiss
+    @State private var newMasterPassword = ""
+    @State private var confirmMasterPassword = ""
 
     private var selectedIndex: Int? {
         guard let selectedLocationID else { return nil }
@@ -910,6 +989,69 @@ private struct SettingsWindowView: View {
                 Text(L10n.string("settings.title"))
                     .font(.title2.weight(.semibold))
 
+                GroupBox {
+                    VStack(alignment: .leading, spacing: 14) {
+                        Text(L10n.string("settings.auth.title"))
+                            .font(.headline)
+
+                        authStatusRow(
+                            title: L10n.string("settings.auth.master.title"),
+                            enabled: model.vaultPath.isEmpty == false && model.passwordUnlockAvailable
+                        )
+
+                        if model.passwordUnlockAvailable == false {
+                            SecureField(L10n.string("settings.auth.master.new_password"), text: $newMasterPassword)
+                            SecureField(L10n.string("settings.auth.master.confirm_password"), text: $confirmMasterPassword)
+
+                            Button(L10n.string("settings.auth.master.enable")) {
+                                model.enableMasterPassword(password: newMasterPassword, confirmation: confirmMasterPassword)
+                                if model.authSettingsError == nil {
+                                    newMasterPassword = ""
+                                    confirmMasterPassword = ""
+                                }
+                            }
+                        } else {
+                            Button(L10n.string("settings.auth.master.disable")) {
+                                model.disableMasterPassword()
+                            }
+                            .disabled(model.canDisableMasterPassword == false)
+                        }
+
+                        Divider()
+
+                        authStatusRow(
+                            title: L10n.string("settings.auth.device.title"),
+                            enabled: model.deviceUnlockConfigured
+                        )
+
+                        if model.deviceUnlockConfigured {
+                            Button(L10n.string("settings.auth.device.disable")) {
+                                model.disableDeviceAuthentication()
+                            }
+                            .disabled(model.canDisableDeviceAuthentication == false)
+                        } else {
+                            Button(L10n.string("settings.auth.device.enable")) {
+                                model.enableDeviceAuthentication()
+                            }
+                        }
+
+                        Text(L10n.string("settings.auth.helper"))
+                            .font(.callout)
+                            .foregroundStyle(.secondary)
+
+                        if let error = model.authSettingsError {
+                            Text(error)
+                                .font(.callout)
+                                .foregroundStyle(.red)
+                        } else if let notice = model.authSettingsNotice {
+                            Text(notice)
+                                .font(.callout)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                    .padding(8)
+                }
+
                 if let selectedIndex {
                     GroupBox {
                         VStack(alignment: .leading, spacing: 14) {
@@ -955,8 +1097,20 @@ private struct SettingsWindowView: View {
             .padding(24)
             .frame(minWidth: 560, minHeight: 420, alignment: .topLeading)
             .background(Color(nsColor: .windowBackgroundColor))
+            .onAppear {
+                model.clearAuthSettingsMessages()
+            }
         }
         .frame(minWidth: 860, minHeight: 520)
+    }
+
+    private func authStatusRow(title: String, enabled: Bool) -> some View {
+        HStack {
+            Text(title)
+            Spacer()
+            Text(enabled ? L10n.string("settings.auth.enabled") : L10n.string("settings.auth.disabled"))
+                .foregroundStyle(enabled ? Color.green : Color.secondary)
+        }
     }
 }
 

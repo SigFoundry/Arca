@@ -49,6 +49,14 @@ final class VaultManager {
         vaultMetadata == nil
     }
 
+    var supportsMasterPassword: Bool {
+        vaultMetadata?.allowsMasterPassword ?? false
+    }
+
+    var supportsDeviceAuthentication: Bool {
+        vaultMetadata?.allowsDeviceAuthentication ?? false
+    }
+
     func makeUnlockRequest() -> UnlockRequest {
         UnlockRequest(
             rootURL: store.rootURL,
@@ -57,29 +65,78 @@ final class VaultManager {
         )
     }
 
-    nonisolated static func performUnlock(password: String, request: UnlockRequest) throws -> UnlockComputationResult {
+    nonisolated static func performInitialUnlock(
+        request: UnlockRequest,
+        initialPassword: String?,
+        deviceAuthenticationEnabled: Bool,
+        deviceSecret: String?
+    ) throws -> UnlockComputationResult {
         let crypto = CryptoService()
         let store = NoteStore(rootURL: request.rootURL, crypto: crypto)
         try store.prepareDirectories()
 
-        let effectiveVaultMetadata: VaultMetadata
-        if let existing = request.vaultMetadata {
-            effectiveVaultMetadata = existing
+        let vaultKey = if let deviceSecret {
+            try crypto.importVaultSecret(deviceSecret)
         } else {
-            let created = try crypto.makeVaultMetadata(password: password)
-            try store.saveVaultMetadata(created)
-            effectiveVaultMetadata = created
+            crypto.makeVaultSecret()
         }
+        let metadata = try crypto.makeVaultMetadata(
+            vaultKey: vaultKey,
+            includeMasterPassword: initialPassword,
+            includeDeviceAuthentication: deviceAuthenticationEnabled
+        )
+        try store.saveVaultMetadata(metadata)
 
-        let derivedKey = try crypto.verifyPassword(password, vaultMetadata: effectiveVaultMetadata)
-        let result = try store.loadVault(key: derivedKey, deviceID: request.deviceMetadata.deviceID)
-        let keyData = derivedKey.withUnsafeBytes { Data($0) }
+        let result = try store.loadVault(key: vaultKey, deviceID: request.deviceMetadata.deviceID)
+        let keyData = vaultKey.withUnsafeBytes { Data($0) }
 
         return UnlockComputationResult(
             keyData: keyData,
             notes: result.notes,
             warnings: result.warnings,
-            vaultMetadata: effectiveVaultMetadata
+            vaultMetadata: metadata
+        )
+    }
+
+    nonisolated static func performPasswordUnlock(password: String, request: UnlockRequest) throws -> UnlockComputationResult {
+        let crypto = CryptoService()
+        let store = NoteStore(rootURL: request.rootURL, crypto: crypto)
+        try store.prepareDirectories()
+
+        guard let metadata = request.vaultMetadata else {
+            throw NoteStoreError.missingMetadata
+        }
+
+        let vaultKey = try crypto.unwrapVaultKey(password: password, vaultMetadata: metadata)
+        let result = try store.loadVault(key: vaultKey, deviceID: request.deviceMetadata.deviceID)
+        let keyData = vaultKey.withUnsafeBytes { Data($0) }
+
+        return UnlockComputationResult(
+            keyData: keyData,
+            notes: result.notes,
+            warnings: result.warnings,
+            vaultMetadata: metadata
+        )
+    }
+
+    nonisolated static func performDeviceAuthenticationUnlock(deviceSecret: String, request: UnlockRequest) throws -> UnlockComputationResult {
+        let crypto = CryptoService()
+        let store = NoteStore(rootURL: request.rootURL, crypto: crypto)
+        try store.prepareDirectories()
+
+        guard let metadata = request.vaultMetadata else {
+            throw NoteStoreError.missingMetadata
+        }
+
+        let vaultKey = try crypto.importVaultSecret(deviceSecret)
+        let result = try store.loadVault(key: vaultKey, deviceID: request.deviceMetadata.deviceID)
+        let keyData = vaultKey.withUnsafeBytes { Data($0) }
+
+        return UnlockComputationResult(
+            keyData: keyData,
+            notes: result.notes,
+            warnings: result.warnings,
+            vaultMetadata: metadata
         )
     }
 
@@ -90,24 +147,6 @@ final class VaultManager {
         vaultMetadata = result.vaultMetadata
     }
 
-    func unlock(password: String) throws {
-        if vaultMetadata == nil {
-            let metadata = try crypto.makeVaultMetadata(password: password)
-            try store.saveVaultMetadata(metadata)
-            vaultMetadata = metadata
-        }
-
-        guard let vaultMetadata else {
-            throw NoteStoreError.missingMetadata
-        }
-
-        let derivedKey = try crypto.verifyPassword(password, vaultMetadata: vaultMetadata)
-        let result = try store.loadVault(key: derivedKey, deviceID: deviceMetadata.deviceID)
-        key = derivedKey
-        notes = result.notes
-        warnings = result.warnings
-    }
-
     func lock() {
         key = nil
         notes = []
@@ -116,6 +155,41 @@ final class VaultManager {
 
     func filteredNotes(query: String) -> [NoteRecord] {
         searchIndex.filter(notes: notes, query: query)
+    }
+
+    func enableMasterPassword(_ password: String) throws {
+        guard let key, let vaultMetadata else { throw NoteStoreError.missingMetadata }
+        let updated = try crypto.enablingMasterPassword(password, for: key, metadata: vaultMetadata)
+        try store.saveVaultMetadata(updated)
+        self.vaultMetadata = updated
+    }
+
+    func disableMasterPassword() throws {
+        guard let vaultMetadata else { throw NoteStoreError.missingMetadata }
+        let updated = crypto.disablingMasterPassword(in: vaultMetadata)
+        guard updated.enabledAuthModes.isEmpty == false else {
+            throw NoteStoreError.missingAuthenticationMethod
+        }
+        try store.saveVaultMetadata(updated)
+        self.vaultMetadata = updated
+    }
+
+    func enableDeviceAuthentication() throws -> String {
+        guard let key, let vaultMetadata else { throw NoteStoreError.missingMetadata }
+        let updated = crypto.enablingDeviceAuthentication(in: vaultMetadata)
+        try store.saveVaultMetadata(updated)
+        self.vaultMetadata = updated
+        return crypto.exportVaultSecret(key)
+    }
+
+    func disableDeviceAuthentication() throws {
+        guard let vaultMetadata else { throw NoteStoreError.missingMetadata }
+        let updated = crypto.disablingDeviceAuthentication(in: vaultMetadata)
+        guard updated.enabledAuthModes.isEmpty == false else {
+            throw NoteStoreError.missingAuthenticationMethod
+        }
+        try store.saveVaultMetadata(updated)
+        self.vaultMetadata = updated
     }
 
     @discardableResult

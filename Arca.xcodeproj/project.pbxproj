@@ -183,7 +183,8 @@
 				TargetAttributes = {
 					18D37563DDECEE83547C9D75 = {
 						CreatedOnToolsVersion = 26.3;
-						ProvisioningStyle = Automatic;
+						DevelopmentTeam = 8NMP6KP8ZH;
+						ProvisioningStyle = Manual;
 					};
 				};
 			};
@@ -252,9 +253,13 @@
 				CODE_SIGN_ENTITLEMENTS = Arca.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 2;
+				DEVELOPMENT_TEAM = 8NMP6KP8ZH;
+				"DEVELOPMENT_TEAM[sdk=macosx*]" = 8NMP6KP8ZH;
 				ENABLE_APP_SANDBOX = NO;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
 				INFOPLIST_KEY_CFBundleDisplayName = Arca;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2026 Aki";
@@ -266,6 +271,7 @@
 				SDKROOT = macosx;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 6.0;
+				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
 		};
@@ -279,7 +285,7 @@
 				CODE_SIGN_IDENTITY = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = 8NMP6KP8ZH;
 				ENABLE_APP_SANDBOX = NO;
@@ -299,6 +305,7 @@
 				SDKROOT = macosx;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 6.0;
+				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
 		};

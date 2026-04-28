@@ -26,7 +26,6 @@ enum VaultLocationFilter: CaseIterable, Identifiable {
     case iCloud
 
     var id: String { "icloud" }
-
     var title: String { L10n.string("location.icloud") }
 }
 
@@ -65,15 +64,18 @@ final class AppModel: ObservableObject {
     @Published var deleteTarget: NoteRecord?
     @Published var selectedTab: NoteBrowserTab = .allItems
     @Published var selectedLocation: VaultLocationFilter = .iCloud
-    @Published var biometricUnlockAvailable = false
-    @Published var biometricUnlockLabel = L10n.string("locked.action.biometric")
-    @Published var biometricSetupMessage = L10n.string("locked.biometric_hint")
+    @Published var initialSetupAuthMode: VaultAuthenticationMode = .masterPassword
+    @Published var deviceAuthAvailable = false
+    @Published var deviceAuthLabel = L10n.string("locked.action.device_auth")
+    @Published var lockedScreenMessage = ""
     @Published var transientNotice: String?
     @Published var titleFocusToken = 0
     @Published var contentFocusToken = 0
     @Published var lockScreenFocusToken = 0
     @Published var sortColumn: NoteSortColumn?
     @Published var sortDirection: NoteSortDirection = .ascending
+    @Published var authSettingsError: String?
+    @Published var authSettingsNotice: String?
 
     let lockController = LockController()
 
@@ -89,7 +91,7 @@ final class AppModel: ObservableObject {
         } catch {
             fatalError(L10n.format("error.init_vault", error.localizedDescription))
         }
-        refreshBiometricUnlockAvailability()
+        refreshAuthenticationState()
     }
 
     var vaultPath: String {
@@ -152,7 +154,32 @@ final class AppModel: ObservableObject {
         vaultPath.contains("/Mobile Documents/com~apple~CloudDocs/") ? L10n.string("location.icloud") : L10n.string("location.local_vault")
     }
 
-    func unlock(password: String, persistBiometricCredential: Bool = true) {
+    var initialSetupUsesMasterPassword: Bool {
+        initialSetupAuthMode == .masterPassword
+    }
+
+    var passwordUnlockAvailable: Bool {
+        needsVaultCreation ? initialSetupUsesMasterPassword : vaultManager.supportsMasterPassword
+    }
+
+    var deviceUnlockConfigured: Bool {
+        needsVaultCreation ? initialSetupAuthMode == .deviceAuthentication : vaultManager.supportsDeviceAuthentication
+    }
+
+    var canDisableMasterPassword: Bool {
+        vaultManager.supportsMasterPassword && vaultManager.supportsDeviceAuthentication
+    }
+
+    var canDisableDeviceAuthentication: Bool {
+        vaultManager.supportsDeviceAuthentication && vaultManager.supportsMasterPassword
+    }
+
+    func setInitialSetupAuthMode(_ mode: VaultAuthenticationMode) {
+        initialSetupAuthMode = mode
+        refreshAuthenticationState()
+    }
+
+    func createVault(password: String?) {
         guard isUnlocking == false else { return }
         isUnlocking = true
         unlockError = nil
@@ -161,48 +188,164 @@ final class AppModel: ObservableObject {
             let request = vaultManager.makeUnlockRequest()
 
             do {
-                let result = try await Task.detached(priority: .userInitiated) {
-                    try VaultManager.performUnlock(password: password, request: request)
-                }.value
+                let result: VaultManager.UnlockComputationResult
+                switch initialSetupAuthMode {
+                case .masterPassword:
+                    guard let password else {
+                        throw CryptoError.passwordVerificationFailed
+                    }
+                    result = try await Task.detached(priority: .userInitiated) {
+                        try VaultManager.performInitialUnlock(
+                            request: request,
+                            initialPassword: password,
+                            deviceAuthenticationEnabled: false,
+                            deviceSecret: nil
+                        )
+                    }.value
+                case .deviceAuthentication:
+                    let crypto = CryptoService()
+                    let secret = crypto.exportVaultSecret(crypto.makeVaultSecret())
+                    try credentialUnlockService.store(secret: secret)
+                    do {
+                        result = try await Task.detached(priority: .userInitiated) {
+                            try VaultManager.performInitialUnlock(
+                                request: request,
+                                initialPassword: nil,
+                                deviceAuthenticationEnabled: true,
+                                deviceSecret: secret
+                            )
+                        }.value
+                    } catch {
+                        credentialUnlockService.deleteStoredSecret()
+                        throw error
+                    }
+                }
 
                 await MainActor.run {
-                    self.vaultManager.applyUnlockResult(result)
-                    self.warnings = result.warnings
-                    self.unlockError = nil
-                    self.isLocked = false
-                    if persistBiometricCredential {
-                        do {
-                            try self.credentialUnlockService.store(password: password)
-                        } catch CredentialUnlockError.unavailable {
-                            self.biometricSetupMessage = self.credentialUnlockService.setupMessage(hasStoredCredential: false)
-                        } catch {
-                            self.warnings = result.warnings + [error.localizedDescription]
-                        }
-                    }
-                    self.refreshBiometricUnlockAvailability()
-                    self.lockController.start { [weak self] in
-                        self?.lock()
-                    }
-                    self.selectedNoteID = nil
-                    self.clearEditor()
-                    self.isUnlocking = false
+                    self.finishUnlock(with: result)
                 }
             } catch {
                 await MainActor.run {
                     self.unlockError = error.localizedDescription
                     self.isUnlocking = false
+                    self.refreshAuthenticationState()
                 }
             }
         }
     }
 
-    func unlockWithBiometrics() {
+    func unlockWithPassword(_ password: String) {
+        guard isUnlocking == false else { return }
+        isUnlocking = true
+        unlockError = nil
+
+        Task {
+            let request = vaultManager.makeUnlockRequest()
+            do {
+                let result = try await Task.detached(priority: .userInitiated) {
+                    try VaultManager.performPasswordUnlock(password: password, request: request)
+                }.value
+
+                await MainActor.run {
+                    self.finishUnlock(with: result)
+                }
+            } catch {
+                await MainActor.run {
+                    self.unlockError = error.localizedDescription
+                    self.isUnlocking = false
+                    self.refreshAuthenticationState()
+                }
+            }
+        }
+    }
+
+    func unlockWithDeviceAuthentication() {
+        guard isUnlocking == false else { return }
+        isUnlocking = true
+        unlockError = nil
+
         do {
-            let password = try credentialUnlockService.retrievePassword(prompt: L10n.string("unlock.prompt"))
-            unlock(password: password, persistBiometricCredential: false)
+            let secret = try credentialUnlockService.retrieveSecret(prompt: L10n.string("unlock.prompt"))
+
+            Task {
+                let request = vaultManager.makeUnlockRequest()
+                do {
+                    let result = try await Task.detached(priority: .userInitiated) {
+                        try VaultManager.performDeviceAuthenticationUnlock(deviceSecret: secret, request: request)
+                    }.value
+
+                    await MainActor.run {
+                        self.finishUnlock(with: result)
+                    }
+                } catch {
+                    await MainActor.run {
+                        self.unlockError = error.localizedDescription
+                        self.isUnlocking = false
+                        self.refreshAuthenticationState()
+                    }
+                }
+            }
         } catch {
             unlockError = error.localizedDescription
-            refreshBiometricUnlockAvailability()
+            isUnlocking = false
+            refreshAuthenticationState()
+        }
+    }
+
+    func enableMasterPassword(password: String, confirmation: String) {
+        guard password == confirmation else {
+            authSettingsError = L10n.string("locked.error.passwords_mismatch")
+            return
+        }
+
+        do {
+            try vaultManager.enableMasterPassword(password)
+            authSettingsError = nil
+            authSettingsNotice = L10n.string("settings.auth.master.enabled")
+            refreshAuthenticationState()
+        } catch {
+            authSettingsError = error.localizedDescription
+        }
+    }
+
+    func disableMasterPassword() {
+        do {
+            try vaultManager.disableMasterPassword()
+            authSettingsError = nil
+            authSettingsNotice = L10n.string("settings.auth.master.disabled")
+            refreshAuthenticationState()
+        } catch {
+            authSettingsError = error.localizedDescription
+        }
+    }
+
+    func enableDeviceAuthentication() {
+        do {
+            let secret = try vaultManager.enableDeviceAuthentication()
+            do {
+                try credentialUnlockService.store(secret: secret)
+            } catch {
+                try? vaultManager.disableDeviceAuthentication()
+                throw error
+            }
+            authSettingsError = nil
+            authSettingsNotice = L10n.string("settings.auth.device.enabled")
+            refreshAuthenticationState()
+        } catch {
+            authSettingsError = error.localizedDescription
+            refreshAuthenticationState()
+        }
+    }
+
+    func disableDeviceAuthentication() {
+        do {
+            try vaultManager.disableDeviceAuthentication()
+            credentialUnlockService.deleteStoredSecret()
+            authSettingsError = nil
+            authSettingsNotice = L10n.string("settings.auth.device.disabled")
+            refreshAuthenticationState()
+        } catch {
+            authSettingsError = error.localizedDescription
         }
     }
 
@@ -215,6 +358,7 @@ final class AppModel: ObservableObject {
         selectedNoteID = nil
         clearEditor()
         warnings = []
+        refreshAuthenticationState()
     }
 
     func requestLock() {
@@ -311,6 +455,25 @@ final class AppModel: ObservableObject {
         resolvePendingChangesIfNeeded()
     }
 
+    func clearAuthSettingsMessages() {
+        authSettingsError = nil
+        authSettingsNotice = nil
+    }
+
+    private func finishUnlock(with result: VaultManager.UnlockComputationResult) {
+        vaultManager.applyUnlockResult(result)
+        warnings = result.warnings
+        unlockError = nil
+        isLocked = false
+        lockController.start { [weak self] in
+            self?.lock()
+        }
+        selectedNoteID = nil
+        clearEditor()
+        isUnlocking = false
+        refreshAuthenticationState()
+    }
+
     private func save(noteID: UUID, title: String, content: String) -> Bool {
         do {
             let didSave = try vaultManager.saveNote(id: noteID, title: title, content: content)
@@ -400,17 +563,28 @@ final class AppModel: ObservableObject {
         }
     }
 
-    private func refreshBiometricUnlockAvailability() {
-        if let kind = credentialUnlockService.biometricKind() {
-            biometricUnlockLabel = kind.buttonTitle
-            let hasStoredCredential = credentialUnlockService.hasStoredCredential()
-            biometricUnlockAvailable = hasStoredCredential
-            biometricSetupMessage = credentialUnlockService.setupMessage(hasStoredCredential: hasStoredCredential)
-        } else {
-            biometricUnlockLabel = L10n.string("locked.action.biometric")
-            biometricUnlockAvailable = false
-            biometricSetupMessage = credentialUnlockService.setupMessage(hasStoredCredential: false)
+    private func refreshAuthenticationState() {
+        deviceAuthLabel = credentialUnlockService.buttonTitle()
+        let hasStoredCredential = credentialUnlockService.hasStoredCredential()
+        let canAuthenticate = credentialUnlockService.isDeviceAuthenticationAvailable()
+        let canUseProtectedKeychain = credentialUnlockService.isRunningAsAppBundle()
+
+        if needsVaultCreation {
+            deviceAuthAvailable = canAuthenticate && canUseProtectedKeychain
+            lockedScreenMessage = credentialUnlockService.lockedScreenMessage(
+                hasMasterPassword: initialSetupAuthMode == .masterPassword,
+                hasDeviceAuthentication: initialSetupAuthMode == .deviceAuthentication,
+                hasStoredCredential: hasStoredCredential
+            )
+            return
         }
+
+        deviceAuthAvailable = canAuthenticate && vaultManager.supportsDeviceAuthentication
+        lockedScreenMessage = credentialUnlockService.lockedScreenMessage(
+            hasMasterPassword: vaultManager.supportsMasterPassword,
+            hasDeviceAuthentication: vaultManager.supportsDeviceAuthentication,
+            hasStoredCredential: hasStoredCredential
+        )
     }
 
     private func showTransientNotice(_ message: String) {

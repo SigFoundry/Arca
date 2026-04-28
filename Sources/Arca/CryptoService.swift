@@ -6,6 +6,7 @@ enum CryptoError: Error, LocalizedError {
     case invalidEnvelope
     case passwordVerificationFailed
     case unsupportedCipherSuite(String)
+    case missingMasterPasswordConfiguration
 
     var errorDescription: String? {
         switch self {
@@ -17,6 +18,8 @@ enum CryptoError: Error, LocalizedError {
             return L10n.string("error.crypto.password_incorrect")
         case .unsupportedCipherSuite(let suite):
             return L10n.format("error.crypto.unsupported_suite", suite)
+        case .missingMasterPasswordConfiguration:
+            return L10n.string("error.crypto.missing_master_password")
         }
     }
 }
@@ -25,7 +28,6 @@ struct CryptoService {
     private enum CryptoSuite {
         static let cipher = "aes-256-gcm"
         static let keyLength = 32
-        static let verificationPlaintext = "arca-unlock-check"
     }
 
     private let jsonEncoder: JSONEncoder
@@ -40,50 +42,99 @@ struct CryptoService {
         jsonDecoder.dateDecodingStrategy = .iso8601
     }
 
-    func makeVaultMetadata(password: String) throws -> VaultMetadata {
-        let salt = Data((0..<16).map { _ in UInt8.random(in: .min ... .max) })
-        let iterations = 210_000
-        let key = deriveKey(password: password, salt: salt, iterations: iterations)
-        let seal = try AES.GCM.seal(Data(CryptoSuite.verificationPlaintext.utf8), using: key)
+    func makeVaultSecret() -> SymmetricKey {
+        let secret = Data((0..<CryptoSuite.keyLength).map { _ in UInt8.random(in: .min ... .max) })
+        return SymmetricKey(data: secret)
+    }
+
+    func makeVaultMetadata(
+        vaultKey: SymmetricKey,
+        includeMasterPassword password: String?,
+        includeDeviceAuthentication: Bool
+    ) throws -> VaultMetadata {
+        var enabledModes: [VaultAuthenticationMode] = []
+        var masterPasswordConfig: MasterPasswordAuthConfig?
+
+        if let password {
+            masterPasswordConfig = try makeMasterPasswordConfig(password: password, vaultKey: vaultKey)
+            enabledModes.append(.masterPassword)
+        }
+
+        if includeDeviceAuthentication {
+            enabledModes.append(.deviceAuthentication)
+        }
+
         return VaultMetadata(
             formatVersion: FileFormatVersion.currentVaultMetadata,
-            kdf: "pbkdf2-sha256",
             cipher: CryptoSuite.cipher,
             createdAt: Date(),
-            salt: salt.base64EncodedString(),
-            iterations: iterations,
-            keyCheck: KeyCheckEnvelope(
-                nonce: seal.nonce.withUnsafeBytes { Data($0).base64EncodedString() },
-                ciphertext: seal.ciphertext.base64EncodedString(),
-                tag: seal.tag.base64EncodedString()
-            )
+            enabledAuthModes: enabledModes,
+            masterPassword: masterPasswordConfig,
+            deviceAuthenticationEnabled: includeDeviceAuthentication
         )
     }
 
-    func deriveKey(password: String, vaultMetadata: VaultMetadata) throws -> SymmetricKey {
+    func enablingMasterPassword(_ password: String, for vaultKey: SymmetricKey, metadata: VaultMetadata) throws -> VaultMetadata {
+        var updated = metadata
+        updated.masterPassword = try makeMasterPasswordConfig(password: password, vaultKey: vaultKey)
+        if updated.enabledAuthModes.contains(.masterPassword) == false {
+            updated.enabledAuthModes.append(.masterPassword)
+        }
+        return updated
+    }
+
+    func disablingMasterPassword(in metadata: VaultMetadata) -> VaultMetadata {
+        var updated = metadata
+        updated.masterPassword = nil
+        updated.enabledAuthModes.removeAll { $0 == .masterPassword }
+        return updated
+    }
+
+    func enablingDeviceAuthentication(in metadata: VaultMetadata) -> VaultMetadata {
+        var updated = metadata
+        updated.deviceAuthenticationEnabled = true
+        if updated.enabledAuthModes.contains(.deviceAuthentication) == false {
+            updated.enabledAuthModes.append(.deviceAuthentication)
+        }
+        return updated
+    }
+
+    func disablingDeviceAuthentication(in metadata: VaultMetadata) -> VaultMetadata {
+        var updated = metadata
+        updated.deviceAuthenticationEnabled = false
+        updated.enabledAuthModes.removeAll { $0 == .deviceAuthentication }
+        return updated
+    }
+
+    func unwrapVaultKey(password: String, vaultMetadata: VaultMetadata) throws -> SymmetricKey {
         try FileFormatVersion.validate(vaultMetadata.formatVersion, for: .vaultMetadata)
         try validateCipherSuite(vaultMetadata.cipher)
-        guard let salt = Data(base64Encoded: vaultMetadata.salt) else {
+        guard let config = vaultMetadata.masterPassword else {
+            throw CryptoError.missingMasterPasswordConfiguration
+        }
+
+        guard let salt = Data(base64Encoded: config.salt) else {
             throw CryptoError.invalidBase64
         }
-        return deriveKey(password: password, salt: salt, iterations: vaultMetadata.iterations)
+
+        let derivedKey = deriveWrappingKey(password: password, salt: salt, iterations: config.iterations)
+        let wrappedSecret = try openEnvelope(config.wrappedSecret, using: derivedKey)
+        guard wrappedSecret.count == CryptoSuite.keyLength else {
+            throw CryptoError.invalidEnvelope
+        }
+
+        return SymmetricKey(data: wrappedSecret)
     }
 
-    func verifyPassword(_ password: String, vaultMetadata: VaultMetadata) throws -> SymmetricKey {
-        let key = try deriveKey(password: password, vaultMetadata: vaultMetadata)
-        let nonceData = try decodeBase64(vaultMetadata.keyCheck.nonce)
-        let ciphertext = try decodeBase64(vaultMetadata.keyCheck.ciphertext)
-        let tag = try decodeBase64(vaultMetadata.keyCheck.tag)
-        let sealedBox = try AES.GCM.SealedBox(
-            nonce: try AES.GCM.Nonce(data: nonceData),
-            ciphertext: ciphertext,
-            tag: tag
-        )
-        let plaintext = try AES.GCM.open(sealedBox, using: key)
-        guard plaintext == Data(CryptoSuite.verificationPlaintext.utf8) else {
-            throw CryptoError.passwordVerificationFailed
+    func exportVaultSecret(_ vaultKey: SymmetricKey) -> String {
+        vaultKey.withUnsafeBytes { Data($0).base64EncodedString() }
+    }
+
+    func importVaultSecret(_ encoded: String) throws -> SymmetricKey {
+        guard let data = Data(base64Encoded: encoded), data.count == CryptoSuite.keyLength else {
+            throw CryptoError.invalidBase64
         }
-        return key
+        return SymmetricKey(data: data)
     }
 
     func encrypt(note: NotePayload, using key: SymmetricKey) throws -> EncryptedNoteFile {
@@ -122,14 +173,22 @@ struct CryptoService {
         jsonDecoder
     }
 
-    private func decodeBase64(_ string: String) throws -> Data {
-        guard let data = Data(base64Encoded: string) else {
-            throw CryptoError.invalidBase64
-        }
-        return data
+    private func makeMasterPasswordConfig(password: String, vaultKey: SymmetricKey) throws -> MasterPasswordAuthConfig {
+        let salt = Data((0..<16).map { _ in UInt8.random(in: .min ... .max) })
+        let iterations = 210_000
+        let derivedKey = deriveWrappingKey(password: password, salt: salt, iterations: iterations)
+        let secretData = vaultKey.withUnsafeBytes { Data($0) }
+        let envelope = try seal(secretData, using: derivedKey)
+
+        return MasterPasswordAuthConfig(
+            kdf: "pbkdf2-sha256",
+            salt: salt.base64EncodedString(),
+            iterations: iterations,
+            wrappedSecret: envelope
+        )
     }
 
-    private func deriveKey(password: String, salt: Data, iterations: Int) -> SymmetricKey {
+    private func deriveWrappingKey(password: String, salt: Data, iterations: Int) -> SymmetricKey {
         let passwordData = Data(password.utf8)
         let derived = pbkdf2SHA256(
             password: passwordData,
@@ -138,6 +197,34 @@ struct CryptoService {
             keyLength: CryptoSuite.keyLength
         )
         return SymmetricKey(data: derived)
+    }
+
+    private func seal(_ plaintext: Data, using key: SymmetricKey) throws -> KeyCheckEnvelope {
+        let seal = try AES.GCM.seal(plaintext, using: key)
+        return KeyCheckEnvelope(
+            nonce: seal.nonce.withUnsafeBytes { Data($0).base64EncodedString() },
+            ciphertext: seal.ciphertext.base64EncodedString(),
+            tag: seal.tag.base64EncodedString()
+        )
+    }
+
+    private func openEnvelope(_ envelope: KeyCheckEnvelope, using key: SymmetricKey) throws -> Data {
+        let nonceData = try decodeBase64(envelope.nonce)
+        let ciphertext = try decodeBase64(envelope.ciphertext)
+        let tag = try decodeBase64(envelope.tag)
+        let sealedBox = try AES.GCM.SealedBox(
+            nonce: try AES.GCM.Nonce(data: nonceData),
+            ciphertext: ciphertext,
+            tag: tag
+        )
+        return try AES.GCM.open(sealedBox, using: key)
+    }
+
+    private func decodeBase64(_ string: String) throws -> Data {
+        guard let data = Data(base64Encoded: string) else {
+            throw CryptoError.invalidBase64
+        }
+        return data
     }
 
     private func validateCipherSuite(_ cipher: String?) throws {
