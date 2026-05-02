@@ -8,6 +8,13 @@
       name="description"
       content="Arca is a calm, encrypted note utility for macOS. Built for people who miss the old Secure Notes workflow."
     />
+    <meta property="og:title" content="Arca | Secure Notes for macOS" />
+    <meta
+      property="og:description"
+      content="A quiet, encrypted note app for macOS with iCloud-friendly storage and a familiar utility feel."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="./assets/arca-hero.png" />
     <link rel="icon" type="image/png" href="./assets/app-icon.png" />
     <link rel="stylesheet" href="./assets/styles.css" />
   </head>
@@ -43,10 +50,22 @@
               One note per encrypted file, iCloud-friendly storage, and a native macOS utility feel.
             </p>
             <div class="hero-actions">
-              <a class="button button-primary" href="https://github.com/SigFoundry/Arca/releases" data-i18n="hero.download">Download DMG</a>
-              <a class="button button-secondary" href="https://github.com/SigFoundry/Arca" data-i18n="hero.github">View on GitHub</a>
+              <a
+                class="button button-primary"
+                href="https://github.com/SigFoundry/Arca/releases/latest"
+                data-i18n="hero.download"
+                >Download DMG</a
+              >
+              <a
+                class="button button-secondary"
+                href="https://github.com/SigFoundry/Arca"
+                data-i18n="hero.github"
+                >View on GitHub</a
+              >
             </div>
-            <p class="micro-copy" data-i18n="hero.note">Requires macOS. Distributed as a notarization-ready DMG.</p>
+            <p class="micro-copy" data-i18n="hero.note">
+              Requires macOS. Distributed as a notarization-ready DMG.
+            </p>
           </div>
           <div class="hero-media">
             <img class="hero-product" src="./assets/arca-hero.png" alt="Arca hero illustration" />
@@ -54,7 +73,7 @@
         </div>
       </section>
 
-      <section class="feature-band feature-strip-light">
+      <section class="feature-band feature-strip" aria-label="Product stats">
         <div class="feature-strip-inner shell">
           <div>
             <p class="stat-label" data-i18n="stats.encrypted.label">Encrypted on disk</p>
@@ -86,9 +105,15 @@
               and move on.
             </p>
             <ul class="feature-list">
-              <li data-i18n="showcase.point1">Native macOS interface with a Keychain-like three-pane layout</li>
-              <li data-i18n="showcase.point2">Master password protection with optional biometric local unlock</li>
-              <li data-i18n="showcase.point3">Single-window utility behavior without extra workspace clutter</li>
+              <li data-i18n="showcase.point1">
+                Native macOS interface with a Keychain-like three-pane layout
+              </li>
+              <li data-i18n="showcase.point2">
+                Master password protection with optional biometric local unlock
+              </li>
+              <li data-i18n="showcase.point3">
+                Single-window utility behavior without extra workspace clutter
+              </li>
             </ul>
           </div>
           <div class="showcase-media">
@@ -144,14 +169,24 @@
         <div class="download-section shell">
           <div class="section-copy section-copy-center narrow">
             <p class="eyebrow" data-i18n="download.eyebrow">Download</p>
-            <h2 data-i18n="download.title">Install Arca with a single DMG.</h2>
+            <h2 data-i18n="download.title">A DMG is ready, so you can install Arca and start using it right away.</h2>
             <p data-i18n="download.body">
-              This GitHub Pages site serves the downloadable DMG directly, so you can link the
-              product page and the installer from the same place.
+              Download the DMG, drag Arca into Applications, and move straight into your secure
+              notes workflow on macOS.
             </p>
             <div class="hero-actions download-actions">
-              <a class="button button-primary" href="https://github.com/SigFoundry/Arca/releases" data-i18n="download.primary">Download Arca.1.0.2.dmg</a>
-              <a class="button button-secondary" href="https://github.com/SigFoundry/Arca" data-i18n="download.secondary">Read the source</a>
+              <a
+                class="button button-primary"
+                href="https://github.com/SigFoundry/Arca/releases/latest"
+                data-i18n="download.primary"
+                >Download Arca.dmg</a
+              >
+              <a
+                class="button button-secondary"
+                href="https://github.com/SigFoundry/Arca"
+                data-i18n="download.secondary"
+                >Read the source</a
+              >
             </div>
           </div>
         </div>
@@ -258,64 +293,56 @@
             "各ノートは独立した暗号化ファイルとして保存され、AES-256-GCM とマスターパスワード由来の鍵で保護されます。",
           "cards.c2.title": "壊れにくい同期設計",
           "cards.c2.body":
-            "競合が起きても片方を黙って消さずに保持し、壊れたファイルがあっても vault 全体を巻き込まずに扱えます。",
+            "競合は静かに消さずに保全し、壊れたファイルがあっても保管庫全体を巻き込まないように扱います。",
           "cards.c3.title": "iCloud Drive に自然に対応",
           "cards.c3.body":
-            "iCloud が使える環境では iCloud Drive ベースの vault を使い、使えない環境ではローカル保存へ自然に切り替わります。",
-          "cards.c4.title": "必要なことだけに集中",
+            "iCloud Drive が利用できる環境ではその保管庫を使い、使えない環境ではローカル保存に自然に切り替わります。",
+          "cards.c4.title": "素早いアクセスに特化",
           "cards.c4.body":
-            "検索、編集、明示的な保存、再ロック。タグや共同編集や過剰な装飾は持ち込まず、すばやく扱えることを優先しています。",
+            "検索して、編集して、意図的に保存して、また閉じる。タグや共同編集、過剰な装飾に寄らない設計です。",
           "download.eyebrow": "ダウンロード",
-          "download.title": "DMG を用意しているので、ダウンロード後すぐに使い始められます。",
+          "download.title": "DMG を用意しているので、すぐに Arca を使い始められます。",
           "download.body":
-            "DMG をダウンロードして Applications に入れるだけで、macOS 上ですぐに Arca を使い始められます。",
+            "DMG をダウンロードして Applications にドラッグするだけで、macOS 上のセキュアノート環境をすぐ始められます。",
           "download.primary": "Arca.dmg をダウンロード",
           "download.secondary": "ソースコードを見る"
         }
       };
 
-      const metaDescription = document.querySelector('meta[name="description"]');
-      const localeButtons = document.querySelectorAll(".locale-button");
-      const localizedNodes = document.querySelectorAll("[data-i18n]");
+      const localeButtons = Array.from(document.querySelectorAll("[data-locale]"));
+      const translatableNodes = Array.from(document.querySelectorAll("[data-i18n]"));
+      const titleNode = document.querySelector("title");
+      const descriptionNode = document.querySelector('meta[name="description"]');
 
       function applyLocale(locale) {
-        const dict = copy[locale] || copy.en;
-        document.documentElement.lang = locale;
-        document.title = dict.pageTitle;
-        metaDescription.setAttribute("content", dict.pageDescription);
+        const resolved = copy[locale] ? locale : "en";
+        document.documentElement.lang = resolved;
+        localStorage.setItem("arca-site-locale", resolved);
 
-        localizedNodes.forEach((node) => {
-          const key = node.getAttribute("data-i18n");
-          if (dict[key]) {
-            node.textContent = dict[key];
+        translatableNodes.forEach((node) => {
+          const key = node.dataset.i18n;
+          const value = copy[resolved][key];
+          if (typeof value === "string") {
+            node.textContent = value;
           }
         });
 
+        titleNode.textContent = copy[resolved].pageTitle;
+        descriptionNode.setAttribute("content", copy[resolved].pageDescription);
+
         localeButtons.forEach((button) => {
-          button.classList.toggle("is-active", button.dataset.locale === locale);
+          button.classList.toggle("is-active", button.dataset.locale === resolved);
         });
-
-        try {
-          localStorage.setItem("arca-locale", locale);
-        } catch (error) {
-          void error;
-        }
-      }
-
-      const browserLocale = navigator.language && navigator.language.toLowerCase().startsWith("ja") ? "ja" : "en";
-      let initialLocale = browserLocale;
-
-      try {
-        initialLocale = localStorage.getItem("arca-locale") || browserLocale;
-      } catch (error) {
-        void error;
       }
 
       localeButtons.forEach((button) => {
         button.addEventListener("click", () => applyLocale(button.dataset.locale));
       });
 
-      applyLocale(initialLocale === "ja" ? "ja" : "en");
+      const preferredLocale = localStorage.getItem("arca-site-locale");
+      const browserLocale =
+        navigator.language && navigator.language.toLowerCase().startsWith("ja") ? "ja" : "en";
+      applyLocale(preferredLocale || browserLocale);
     </script>
   </body>
 </html>
