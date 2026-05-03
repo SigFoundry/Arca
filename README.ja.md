@@ -2,7 +2,7 @@
 
 [English README](./README.md)
 
-![Arca hero](docs/arca-hero.svg)
+![Arca hero](docs/assets/arca-hero.png)
 
 Arca は、Keychain Access の昔ながらの Secure Notes ワークフローを置き換えるための、シンプルな macOS 向けアプリです。
 

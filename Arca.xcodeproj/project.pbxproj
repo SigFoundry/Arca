@@ -22,7 +22,6 @@
 		C5E7B40E567C5F520A9EB0C5 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09A2615044A2D98C49FA4981 /* Models.swift */; };
 		C6235CBFBC5DA46ECE6A4926 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 529304F011B0A1772C35B073 /* Cocoa.framework */; };
 		E2FA58D0C8FA38D2A43C7983 /* NoteStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A5476F266F22D730213EB4C /* NoteStore.swift */; };
-		E647D650B1325BE8ABB32689 /* arca-hero.svg in Resources */ = {isa = PBXBuildFile; fileRef = 1293E3EAE4FC2D1EE13874D2 /* arca-hero.svg */; };
 		E6E587A787436599E9AE95E6 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 66084875482503704C639681 /* Localizable.strings */; };
 		F1DDA3670439EDBD7310E7C4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3979F8F44838E3F452F768C /* ContentView.swift */; };
 /* End PBXBuildFile section */
@@ -31,13 +30,13 @@
 		09A2615044A2D98C49FA4981 /* Models.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Models.swift; path = Sources/Arca/Models.swift; sourceTree = "<group>"; };
 		09E8D1FF64282EDE1EA1F2DE /* CredentialUnlockService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CredentialUnlockService.swift; path = Sources/Arca/CredentialUnlockService.swift; sourceTree = "<group>"; };
 		11015D4F762F453D829CB339 /* AtomicFileWriter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AtomicFileWriter.swift; path = Sources/Arca/AtomicFileWriter.swift; sourceTree = "<group>"; };
-		1293E3EAE4FC2D1EE13874D2 /* arca-hero.svg */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = "arca-hero.svg"; path = "docs/arca-hero.svg"; sourceTree = "<group>"; };
 		191665F2053C6149994F59C5 /* CryptoService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CryptoService.swift; path = Sources/Arca/CryptoService.swift; sourceTree = "<group>"; };
 		3B2884E889806619391A50D4 /* ArcaApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ArcaApp.swift; path = Sources/Arca/ArcaApp.swift; sourceTree = "<group>"; };
 		529304F011B0A1772C35B073 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
 		617727A3F7E41C570140825F /* Assets.xcassets */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Arca/Assets.xcassets; sourceTree = "<group>"; };
 		65CC69A1BB01DA682996A995 /* Arca.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Arca.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		66084875482503704C639681 /* Localizable.strings */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = Localizable.strings; path = Sources/Arca/Resources/ja.lproj/Localizable.strings; sourceTree = "<group>"; };
+		7A9B2E5F0D7F4E2A8C1B9D44 /* ArcaRelease.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = ArcaRelease.entitlements; sourceTree = "<group>"; };
 		85C521D8E24D96E03CE63EF8 /* LockController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LockController.swift; path = Sources/Arca/LockController.swift; sourceTree = "<group>"; };
 		88DEED27973FD5970FBF2894 /* Localizable.strings */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = Localizable.strings; path = Sources/Arca/Resources/en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		8A5476F266F22D730213EB4C /* NoteStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NoteStore.swift; path = Sources/Arca/NoteStore.swift; sourceTree = "<group>"; };
@@ -111,22 +110,14 @@
 			name = Resources;
 			sourceTree = "<group>";
 		};
-		BEA62FD3C8DD0ED94BBF6401 /* docs */ = {
-			isa = PBXGroup;
-			children = (
-				1293E3EAE4FC2D1EE13874D2 /* arca-hero.svg */,
-			);
-			name = docs;
-			sourceTree = "<group>";
-		};
 		CFC78639A0F6549BE4FEC062 = {
 			isa = PBXGroup;
 			children = (
 				65E2A70E69739253854AE655 /* Products */,
 				5777DFB9BE04FF6FFC59A3D5 /* Frameworks */,
 				45AB7C21045B17AC7CFD3118 /* Sources */,
-				BEA62FD3C8DD0ED94BBF6401 /* docs */,
 				D167FA7FB315291356EA8E8B /* Arca.entitlements */,
+				7A9B2E5F0D7F4E2A8C1B9D44 /* ArcaRelease.entitlements */,
 				1056CB971D78FD5F8967653D /* Arca */,
 			);
 			sourceTree = "<group>";
@@ -184,7 +175,7 @@
 					18D37563DDECEE83547C9D75 = {
 						CreatedOnToolsVersion = 26.3;
 						DevelopmentTeam = 8NMP6KP8ZH;
-						ProvisioningStyle = Manual;
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
@@ -213,7 +204,6 @@
 			files = (
 				9463CCEC9348E891236DA678 /* Localizable.strings in Resources */,
 				E6E587A787436599E9AE95E6 /* Localizable.strings in Resources */,
-				E647D650B1325BE8ABB32689 /* arca-hero.svg in Resources */,
 				B7B4CB3AFBA341C6CE9D540C /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -253,18 +243,20 @@
 				CODE_SIGN_ENTITLEMENTS = Arca.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 8NMP6KP8ZH;
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = 8NMP6KP8ZH;
 				ENABLE_APP_SANDBOX = NO;
 				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
 				INFOPLIST_KEY_CFBundleDisplayName = Arca;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2026 Aki";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.sigcon-inc.apps.arca";
 				PRODUCT_BUNDLE_PACKAGE_TYPE = APPL;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -281,15 +273,16 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
-				CODE_SIGN_ENTITLEMENTS = Arca.entitlements;
-				CODE_SIGN_IDENTITY = "Developer ID Application";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_ENTITLEMENTS = ArcaRelease.entitlements;
+				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 2;
-				DEVELOPMENT_TEAM = "";
+				CURRENT_PROJECT_VERSION = 3;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = 8NMP6KP8ZH;
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = 8NMP6KP8ZH;
 				ENABLE_APP_SANDBOX = NO;
 				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = Arca;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
@@ -301,7 +294,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.sigcon-inc.apps.arca";
 				PRODUCT_BUNDLE_PACKAGE_TYPE = APPL;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = macosx;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 6.0;
@@ -344,10 +336,12 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_LANGUAGE = en;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -413,10 +407,12 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_LANGUAGE = en;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
